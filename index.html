@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor AR NeoTocapu</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #000; 
+        }
+        .mindar-ui-overlay { 
+            z-index: 100; 
+        }
+        /* Esto fuerza a que el visor de la cámara ocupe el 100% real de la pantalla del celular */
+        video { 
+            object-fit: cover !important; 
+            width: 100vw !important; 
+            height: 100vh !important; 
+        }
+        /* Tu cartel guía calibrado */
+        #cartel-guia { 
+            position: absolute; 
+            top: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(0, 0, 0, 0.75); 
+            color: #00ffcc; 
+            padding: 12px 24px; 
+            border-radius: 25px; 
+            font-family: sans-serif; 
+            font-size: 15px; 
+            font-weight: bold; 
+            z-index: 9999; 
+            text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cartel-guia">Apuntá con la cámara a tu NeoTocapu...</div> 
+
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no; uiError: no;" 
+             embedded 
+             color-space="sRGB" 
+             renderer="colorManagement: true, physicallyCorrectLights" 
+             vr-mode-ui="enabled: false" 
+             device-orientation-permission-ui="enabled: false"> 
+        
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera> 
+        
+        <a-entity mindar-image-target="targetIndex: 0" id="neotocapu-objetivo"></a-entity> 
+    </a-scene> 
+
+    <script> 
+        const targetEl = document.querySelector('#neotocapu-objetivo'); 
+        
+        targetEl.addEventListener("targetFound", event => { 
+            alert("¡NeoTocapu Detectado con éxito!"); 
+            // Acá podés cambiar el link en el futuro por el de tu FlipHTML5 o Drive de prueba
+            window.location.href = "https://fliphtml5.com/"; 
+        }); 
+    </script> 
+
+</body>
+</html>
