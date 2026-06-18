@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeoTocapu</title>
+    <title>Visor AR NeoTocapu</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -13,6 +13,14 @@
             margin: 0; 
             overflow: hidden; 
             background-color: #000; 
+        }
+        .mindar-ui-overlay {
+            z-index: 100;
+        }
+        video {
+            object-fit: cover !important;
+            width: 100vw !important;
+            height: 100vh !important;
         }
         #cartel-guia { 
             position: absolute; 
@@ -28,6 +36,7 @@
             font-weight: bold; 
             z-index: 9999; 
             text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             pointer-events: none; 
         }
     </style>
@@ -36,7 +45,7 @@
 
     <div id="cartel-guia">Apuntá con la cámara a tu NeoTocapu...</div>
 
-    <a-scene mindar-image="imageTargetSrc: ./targetsnuevo.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: ./targetsnuevo.mind; autoStart: true; uiLoading: no; uiError: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
