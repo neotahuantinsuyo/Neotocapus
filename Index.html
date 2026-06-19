@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:title" content="Portal Neotocapus - Experiencias AR" />
+    <meta property="og:description" content="Ingresa tu código exclusivo para activar el escáner de realidad aumentada." />
+    <meta property="og:image" content="https://neotahuantinsuyo.github.io/Neotocapus/portada-whatsapp.jpg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://neotahuantinsuyo.github.io/Neotocapus/index.html" />
+
+    <title>Portal Neotocapus</title>
+
+    <style>
+        body {
+            background-color: #0d0f12;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            text-align: center;
+            padding: 30px 15px;
+            margin: 0;
+        }
+        h1 {
+            color: #3b82f6;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+        .menu-container {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .btn-portal {
+            background-color: #1e293b;
+            color: #ffffff;
+            border: 2px solid #3b82f6;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-portal:active {
+            background-color: #3b82f6;
+            box-shadow: 0 0 15px #3b82f6;
+        }
+        .btn-bloqueado {
+            background-color: #0f172a !important;
+            color: #475569 !important;
+            border: 2px solid #334155 !important;
+            cursor: not-allowed !important;
+            text-decoration: line-through;
+            box-shadow: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PORTAL NEOTOCAPUS</h1>
+    <div class="subtitle">Selecciona tu dibujo para ingresar al escáner</div>
+
+    <div class="menu-container">
+        <button id="btn-T1" class="btn-portal" onclick="accederPortal('T1')">CÍRCULO</button>
+        <button id="btn-T2" class="btn-portal" onclick="accederPortal('T2')">TRIÁNGULO</button>
+        <button id="btn-T3" class="btn-portal" onclick="accederPortal('T3')">CUADRADO</button>
+        <button id="btn-T4" class="btn-portal" onclick="accederPortal('T4')">MIXTO</button>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE CONTRASEÑAS (Mantenemos las tuyas y sumamos el Mixto)
+        const contrasenas = {
+            T1: "circulo77",
+            T2: "triangulo55",
+            T3: "cuadrado33",
+            T4: "mixto99" // Contraseña asignada para el nuevo botón mixto
+        };
+
+        window.onload = function() {
+            verificarBloqueosIniciales();
+        };
+
+        function verificarBloqueosIniciales() {
+            ['T1', 'T2', 'T3', 'T4'].forEach(id => {
+                if (localStorage.getItem('bloqueado_' + id) === 'true') {
+                    const boton = document.getElementById('btn-' + id);
+                    boton.classList.add('btn-bloqueado');
+                    boton.onclick = null;
+                }
+            });
+        }
+
+        function accederPortal(figuraId) {
+            if (localStorage.getItem('bloqueado_' + figuraId) === 'true') {
+                alert("Acceso denegado. Este portal se encuentra bloqueado permanentemente en este dispositivo.");
+                return;
+            }
+
+            let intentosFallidos = parseInt(localStorage.getItem('errores_' + figuraId)) || 0;
+
+            if (intentosFallidos >= 2) {
+                bloquearBoton(figuraId);
+                return;
+            }
+
+            // Cambia el texto dinámicamente según el botón pulsado
+            let nombreFigura = "";
+            if (figuraId === 'T1') nombreFigura = "CÍRCULO";
+            else if (figuraId === 'T2') nombreFigura = "TRIÁNGULO";
+            else if (figuraId === 'T3') nombreFigura = "CUADRADO";
+            else if (figuraId === 'T4') nombreFigura = "MIXTO";
+
+            let claveIngresada = prompt("Ingresa la contraseña de acceso exclusivo para la figura " + nombreFigura + ":");
+
+            if (claveIngresada === null || claveIngresada.trim() === "") return;
+
+            if (claveIngresada === contrasenas[figuraId]) {
+                localStorage.setItem('errores_' + figuraId, '0');
+                // Te redirigirá automáticamente a la subcarpeta T4 cuando la crees en GitHub
+                window.location.href = "./" + figuraId + "/Index.html";
+            } else {
+                intentosFallidos++;
+                localStorage.setItem('errores_' + figuraId, intentosFallidos);
+
+                if (intentosFallidos >= 2) {
+                    bloquearBoton(figuraId);
+                } else {
+                    alert("Contraseña incorrecta. Te queda 1 intento restante antes de bloquear el portal.");
+                }
+            }
+        }
+
+        function bloquearBoton(figuraId) {
+            localStorage.setItem('bloqueado_' + figuraId, 'true');
+            const boton = document.getElementById('btn-' + figuraId);
+            boton.classList.add('btn-bloqueado');
+            boton.onclick = null;
+            
+            alert("Has superado el límite de 2 intentos. El acceso a este portal ha sido bloqueado en este dispositivo.");
+        }
+    </script>
+</body>
+</html>
